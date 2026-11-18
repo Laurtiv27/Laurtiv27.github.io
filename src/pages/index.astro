@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects, skills } from '../data/projects';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <Hero />
+
+  <section class="section" id="projects">
+    <div class="wrap-narrow">
+      <h2 class="section-title">精选作品</h2>
+      <p class="section-desc">均可在 GitHub 打开源码。仅展示公开仓库。</p>
+      <div class="project-list">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+      <p style="margin-top: 1.25rem">
+        <a href="/projects">查看全部作品 →</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <div class="wrap-narrow">
+      <h2 class="section-title">技能</h2>
+      <p class="section-desc">TTS、端侧、移动与桌面相关常用栈。</p>
+      <div class="skills">
+        {skills.map((s) => <span class="tag">{s}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="blog">
+    <div class="wrap-narrow">
+      <h2 class="section-title">近期文章</h2>
+      <p class="section-desc">技术笔记与项目背后的取舍。</p>
+      {
+        posts.length === 0 ? (
+          <p class="muted">即将更新</p>
+        ) : (
+          <div class="post-list">
+            {posts.map((post) => (
+              <a class="post-link" href={`/blog/${post.id}/`}>
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('zh-CN')}
+                </time>
+                <h3>{post.data.title}</h3>
+                <p>{post.data.description}</p>
+              </a>
+            ))}
+          </div>
+        )
+      }
+      <p style="margin-top: 1.25rem">
+        <a href="/blog">进入博客 →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

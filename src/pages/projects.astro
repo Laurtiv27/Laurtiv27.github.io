@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+---
+
+<BaseLayout title="作品 — Lautriv" description="Lautriv 的公开项目列表。">
+  <section class="section">
+    <div class="wrap-narrow">
+      <h1 class="section-title">作品</h1>
+      <p class="section-desc">TTS、端侧应用与桌面工具相关的公开仓库。</p>
+      <div class="project-list">
+        {projects.map((project) => <ProjectCard project={project} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

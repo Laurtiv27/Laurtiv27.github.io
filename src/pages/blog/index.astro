@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="博客 — Lautriv" description="Lautriv 的技术笔记与项目随笔。">
+  <section class="section">
+    <div class="wrap-narrow">
+      <h1 class="section-title">博客</h1>
+      <p class="section-desc">端侧、跨端与工程实践的短文。</p>
+      <div class="post-list">
+        {
+          posts.map((post) => (
+            <a class="post-link" href={`/blog/${post.id}/`}>
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('zh-CN')}
+              </time>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
